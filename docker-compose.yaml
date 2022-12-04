@@ -1,0 +1,33 @@
+version: "3"
+
+volumes:
+  mol-postgres-data: {}
+  mol-postgres-data-backups: {}
+
+services:
+  flask: &flask
+    build:
+      context: .
+      dockerfile: ./compose/development/flask/Dockerfile
+    image: mol
+    container_name: mol
+    platform: linux/x86_64
+    depends_on:
+      - db
+    volumes:
+      - .:/app:z
+    env_file:
+      - ./.envs/.development/.flask
+      - ./.envs/.development/.postgres
+    ports:
+      - "8000:8000"
+    command: /start
+
+  db:
+    image: postgres:14
+    container_name: mol-postgres
+    volumes:
+      - mol-postgres-data:/var/lib/postgresql/data:Z
+      - mol-postgres-data-backups:/backups:z
+    env_file:
+      - ./.envs/.development/.postgres
