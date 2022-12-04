@@ -5,7 +5,7 @@ volumes:
   mol-postgres-data-backups: {}
 
 services:
-  flask: &flask
+  api: &flask
     build:
       context: .
       dockerfile: ./compose/development/flask/Dockerfile
