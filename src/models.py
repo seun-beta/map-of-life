@@ -51,18 +51,28 @@ class Genus(db.Model):
         return "<Genus %r>" % self.genus
 
 
+class Country(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    country_name = db.Column(db.String(512), nullable=True)
+
+
 class Data(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     day = db.Column(db.Integer, nullable=True)
     month = db.Column(db.Integer, nullable=True)
     year = db.Column(db.Integer, nullable=True)
-    country = db.Column(db.String(512), nullable=True)
     latitude = db.Column(db.Float, nullable=True)
     longitude = db.Column(db.Float, nullable=True)
 
+    speciesKey = db.Column(db.Integer, db.ForeignKey("species.id"), nullable=True)
+    species = db.relationship("Species", backref="species_ref")
+
+    countryKey = db.Column(db.Integer, db.ForeignKey("country.id"), nullable=True)
+    country = db.relationship("Country", backref="country_ref")
+
 
 class Species(db.Model):
-    id = db.Column(db.Integer, primary_key=True, autoincrement=False)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     species = db.Column(db.String(512), nullable=False)
 
     taxonKey = db.Column(db.Integer, nullable=True)
@@ -91,9 +101,6 @@ class Species(db.Model):
 
     genusKey = db.Column(db.Integer, db.ForeignKey("genus.id"), nullable=True)
     genus = db.relationship("Genus", backref="genus_ref")
-
-    speciesKey = db.Column(db.Integer, db.ForeignKey("data.id"), nullable=True)
-    data = db.relationship("Data", backref="data_ref")
 
     def __repr__(self):
         return "<Species %r>" % self.species
