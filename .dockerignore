@@ -1,0 +1,8 @@
+.editorconfig
+.gitattributes
+.github
+.gitignore
+.idea
+.pre-commit-config.yaml
+env
+README.md
