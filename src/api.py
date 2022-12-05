@@ -13,6 +13,6 @@ def main():
 
 @mol_bp.get("/db")
 def db():
-    data = Species.query.all()
+    data = Species.query.filter_by(id=1).first()
 
-    return jsonify({"id": data}, HTTP_200_OK)
+    return jsonify({"id": data.taxonKey, "kingdom": data.family.family}, HTTP_200_OK)
