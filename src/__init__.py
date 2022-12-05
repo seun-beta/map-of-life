@@ -10,7 +10,17 @@ from src.constants.http_status_codes import (
     HTTP_500_INTERNAL_SERVER_ERROR,
 )
 from src.models import db
-from src.manage import create_tables, drop_create
+from src.manage import (
+    create_tables,
+    drop_create,
+    seed_kingdom,
+    seed_phylum,
+    seed_class,
+    seed_order,
+    seed_family,
+    seed_genus,
+    seed_species,
+)
 
 
 def create_app(test_config=None):
@@ -42,6 +52,13 @@ def create_app(test_config=None):
 
     app.cli.add_command(create_tables)
     app.cli.add_command(drop_create)
+    app.cli.add_command(seed_kingdom)
+    app.cli.add_command(seed_phylum)
+    app.cli.add_command(seed_class)
+    app.cli.add_command(seed_order)
+    app.cli.add_command(seed_family)
+    app.cli.add_command(seed_genus)
+    app.cli.add_command(seed_species)
 
     @app.errorhandler(HTTP_404_NOT_FOUND)
     def handle_404(e):
