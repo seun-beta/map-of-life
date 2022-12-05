@@ -20,6 +20,7 @@ from src.manage import (
     seed_family,
     seed_genus,
     seed_species,
+    fetch_gbif_data,
 )
 
 
@@ -59,6 +60,7 @@ def create_app(test_config=None):
     app.cli.add_command(seed_family)
     app.cli.add_command(seed_genus)
     app.cli.add_command(seed_species)
+    app.cli.add_command(fetch_gbif_data)
 
     @app.errorhandler(HTTP_404_NOT_FOUND)
     def handle_404(e):

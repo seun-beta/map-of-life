@@ -1,11 +1,23 @@
+# flake8: noqa
 import sys
 
 import click
 import pandas as pd
+import requests
 from flask.cli import with_appcontext
 
 from src import db
-from src.models import Class, Family, Genus, Kingdom, Order, Phylum, Species
+from src.models import (
+    Class,
+    Country,
+    Data,
+    Family,
+    Genus,
+    Kingdom,
+    Order,
+    Phylum,
+    Species,
+)
 
 
 @click.command(name="create_tables")
@@ -30,7 +42,7 @@ def seed_kingdom():
     sys.stdout.write("=== Importing Organism Kingdom ===")
 
     data = pd.read_csv(
-        "",
+        "/Users/seunfunmiadegoke/Desktop/bookmarker-api/new.csv",
         header=0,
         sep="\t",
     )
@@ -57,7 +69,7 @@ def seed_phylum():
     sys.stdout.write("=== Importing Organism Phylum ===")
 
     data = pd.read_csv(
-        "",
+        "/Users/seunfunmiadegoke/Desktop/bookmarker-api/new.csv",
         header=0,
         sep="\t",
     )
@@ -84,7 +96,7 @@ def seed_class():
     sys.stdout.write("=== Importing Organism Class ===")
 
     data = pd.read_csv(
-        "",
+        "/Users/seunfunmiadegoke/Desktop/bookmarker-api/new.csv",
         header=0,
         sep="\t",
     )
@@ -111,7 +123,7 @@ def seed_order():
     sys.stdout.write("=== Importing Organism Order ===")
 
     data = pd.read_csv(
-        "",
+        "/Users/seunfunmiadegoke/Desktop/bookmarker-api/new.csv",
         header=0,
         sep="\t",
     )
@@ -138,7 +150,7 @@ def seed_family():
     sys.stdout.write("=== Importing Organism Family ===")
 
     data = pd.read_csv(
-        "",
+        "/Users/seunfunmiadegoke/Desktop/bookmarker-api/new.csv",
         header=0,
         sep="\t",
     )
@@ -165,7 +177,7 @@ def seed_genus():
     sys.stdout.write("=== Importing Organism Genus ===")
 
     data = pd.read_csv(
-        "",
+        "/Users/seunfunmiadegoke/Desktop/bookmarker-api/new.csv",
         header=0,
         sep="\t",
     )
@@ -192,7 +204,7 @@ def seed_species():
     sys.stdout.write("=== Importing Organism Species ===")
 
     data = pd.read_csv(
-        "",
+        "/Users/seunfunmiadegoke/Desktop/bookmarker-api/new.csv",
         header=0,
         sep="\t",
     )
@@ -201,29 +213,218 @@ def seed_species():
 
     print(data.head())
     for indx in range(len(data)):
+        try:
+            int(data["speciesKey"][indx])
+        except:
+            continue
+
+        try:
+            species = data["species"][indx]
+        except:
+            species = None
+
+        try:
+            taxonKey = int(data["taxonKey"][indx])
+        except:
+            taxonKey = None
+
+        try:
+            acceptedTaxonKey = int(data["acceptedTaxonKey"][indx])
+        except:
+            acceptedTaxonKey = None
+
+        try:
+            scientificName = data["scientificName"][indx]
+        except:
+            scientificName = None
+
+        try:
+            acceptedscientificName = data["acceptedscientificName"][indx]
+        except:
+            acceptedscientificName = None
+
+        try:
+            numberOfOccurrences = int(data["numberOfOccurrences"][indx])
+        except:
+            numberOfOccurrences = None
+
+        try:
+            taxonRank = data["taxonRank"][indx]
+        except:
+            taxonRank = None
+
+        try:
+            taxonomicStatus = data["taxonomicStatus"][indx]
+        except:
+            taxonomicStatus = None
+
+        try:
+            iucnRedListCategory = data["iucnRedListCategory"][indx]
+        except:
+            iucnRedListCategory = None
+
+        try:
+            kingdomKey = (
+                Kingdom.query.filter_by(id=int(data["kingdomKey"][indx])).first().id
+            )
+        except:
+            kingdomKey = None
+
+        try:
+            phylumKey = (
+                Phylum.query.filter_by(id=int(data["phylumKey"][indx])).first().id
+            )
+        except:
+            phylumKey = None
+
+        try:
+            classKey = Class.query.filter_by(id=int(data["classKey"][indx])).first().id
+        except:
+            classKey = None
+
+        try:
+            orderKey = Order.query.filter_by(id=int(data["orderKey"][indx])).first().id
+        except:
+            orderKey = None
+
+        try:
+            familyKey = (
+                Family.query.filter_by(id=int(data["familyKey"][indx])).first().id
+            )
+        except:
+            familyKey = None
+
+        try:
+            genusKey = Genus.query.filter_by(id=int(data["genusKey"][indx])).first().id
+        except:
+            genusKey = None
+
         if not Species.query.filter_by(id=int(data["speciesKey"][indx])).first():
-            Kingdom.query.filter_by()
 
             db.session.add(
                 Species(
-                    id=int(data["speciesKey"][indx]),
-                    species=data["species"][indx] or None,
-                    taxonKey=Kingdom.query.get(id=data["taxonKey"][indx]) or None,
-                    scientificName=data["scientificName"][indx],
-                    acceptedscientificName=data["acceptedscientificName"][indx]
-                    or data["scientificName"][indx],
-                    numberOfOccurrences=data["numberOfOccurrences"][indx] or None,
-                    taxonRank=data["taxonRank"][indx] or None,
-                    taxonomicStatus=data["taxonomicStatus"][indx] or None,
-                    iucnRedListCategory=data["iucnRedListCategory"][indx] or None,
-                    kingdom=Kingdom.query.get(id=data["kingdomKey"][indx]) or None,
-                    phylum=Phylum.query.get(id=data["phylumKey"][indx]) or None,
-                    classKey=Class.query.get(id=data["classKey"][indx]) or None,
-                    orderKey=Order.query.get(id=data["orderKey"][indx]) or None,
-                    familyKey=Family.query.get(id=data["familyKey"][indx]) or None,
-                    genusKey=Genus.query.get(id=data["genusKey"][indx]) or None,
+                    species=species,
+                    taxonKey=taxonKey,
+                    acceptedTaxonKey=acceptedTaxonKey,
+                    scientificName=scientificName,
+                    acceptedscientificName=acceptedscientificName,
+                    numberOfOccurrences=numberOfOccurrences,
+                    taxonRank=taxonRank,
+                    taxonomicStatus=taxonomicStatus,
+                    iucnRedListCategory=iucnRedListCategory,
+                    kingdomKey=kingdomKey,
+                    phylumKey=phylumKey,
+                    classKey=classKey,
+                    orderKey=orderKey,
+                    familyKey=familyKey,
+                    genusKey=genusKey,
                 )
             )
 
         db.session.commit()
     sys.stdout.write("=== Done seeding Organism Species ===")
+
+
+@click.command(name="seed_gbif")
+@with_appcontext
+def fetch_gbif_data():
+    species = Species.query.all()
+    for indx in species:
+        specie_name = indx.species
+        url = "https://www.gbif.org/api/occurrence/"
+        response = requests.get(
+            url + "search?advanced=false&locale=en&q=" + specie_name
+        )
+        response = response.json()
+        data = pd.DataFrame()
+        # country_list = []
+        # longitude_list = []
+        # latitude_list = []
+        # year_list = []
+        # month_list = []
+        # day_list = []
+        # breakpoint()
+        print(len(response["results"]))
+        # breakpoint()
+        for val in response["results"]:
+            try:
+                country = val["country"]
+            except:
+                country = None
+
+            try:
+                decimalLongitude = val["decimalLongitude"]
+            except:
+                decimalLongitude = None
+
+            try:
+                decimalLatitude = val["decimalLatitude"]
+            except:
+                decimalLatitude = None
+
+            try:
+                year = val["year"]
+            except:
+                year = None
+
+            try:
+                month = val["month"]
+            except:
+                month = None
+
+            try:
+                day = val["day"]
+            except:
+                day = None
+
+            if country is None:
+                country_data = None
+            else:
+                country_data = Country.query.filter_by(country_name=country).first()
+            if country_data is None:
+                # breakpoint()
+                country_data = Country(country_name=country)
+                db.session.add(country_data)
+                db.session.commit()
+
+            # try:
+            #     country = Country.query.filter_by(country_name=country).first()
+            # except:
+            #     country = Country(country_name=country)
+            #     db.session.add(country)
+            #     db.session.commit()
+            if "year" not in val.keys():
+                pass
+            try:
+                country_data = country_data.id
+            except:
+                country_data = None
+
+            db.session.add(
+                Data(
+                    day=day,
+                    month=month,
+                    year=year,
+                    latitude=decimalLatitude,
+                    longitude=decimalLongitude,
+                    speciesKey=indx.id,
+                    countryKey=country_data,
+                )
+            )
+
+        db.session.commit()
+
+        #     country_list.append(country)
+        #     longitude_list.append(decimalLongitude)
+        #     latitude_list.append(decimalLatitude)
+        #     year_list.append(year)
+        #     month_list.append(month)
+        #     day_list.append(day)
+        # data["year"] = year
+        # data["month"] = month
+        # data["day"] = day
+        # data["country"] = country
+        # data["longitude"] = longitude
+        # data["latitude"] = latitude
+        # data["scientificName"] = specie_name
+        # print(data)
