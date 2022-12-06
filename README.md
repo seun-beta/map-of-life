@@ -25,6 +25,17 @@ I inspected the csv file and determined a pattern as regards taxonomy. The data 
 8) Data
 9) Country
 
+### Flask CLI Commands
+1) ``` flask create_tables```. This command creates all the database tables
+2) ``` flask drop_create_tables```. This command drop all database tables and creates all them again
+3) ``` flask seed_kingdom```. This command seeds all the Kingdom data from the CSV file
+4) ``` flask seed_phylum```. This command seeds all the Phylum data from the CSV file
+5) ``` flask seed_order```. This command seeds all the Order data from the CSV file
+6) ``` flask seed_family```. This command seeds all the Family data from the CSV file
+7) ``` flask seed_genus```. This command seeds all the Genus data from the CSV file
+8) ``` flask seed_species```. This command seeds all the Species data from the CSV file
+9) ``` flask seed_gbif```. This command seeds all the GBIF data entries for each specie currently in the database.
+
 The Species table holds information regarding distinct species. The Data table holds occurrence information about each specie. The data used to populate the Data table is extracted from gbif.org using the REST API service from GBIF. The country model contains country data also extracted from GBIF.
 
 ### Technology Stack:
