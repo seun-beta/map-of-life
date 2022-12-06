@@ -331,26 +331,39 @@ def fetch_gbif_data():
     species = Species.query.all()
     for indx in species:
         specie_name = indx.species
-        url = "https://www.gbif.org/api/occurrence/"
-        response = requests.get(
-            url + "search?advanced=false&locale=en&q=" + specie_name
-        )
+        url = f"https://www.gbif.org/api/occurrence/search?advanced=false&dwca_extension.facetLimit=1000&facetMultiselect=true&issue.facetLimit=1000&locale=en&month.facetLimit=12&q={specie_name}&type_status.facetLimit=1000"
+        response = requests.get(url)
+
         response = response.json()
         data = pd.DataFrame()
-        # country_list = []
-        # longitude_list = []
-        # latitude_list = []
-        # year_list = []
-        # month_list = []
-        # day_list = []
-        # breakpoint()
+
         print(len(response["results"]))
-        # breakpoint()
+
         for val in response["results"]:
             try:
                 country = val["country"]
             except:
                 country = None
+
+            try:
+                country_code = val["countryCode"]
+            except:
+                country_code = None
+
+            try:
+                gbifID = val["gbifID"]
+            except:
+                gbifID = None
+
+            try:
+                basisOfRecord = val["basisOfRecord"]
+            except:
+                basisOfRecord = None
+
+            try:
+                occurrenceStatus = val["occurrenceStatus"]
+            except:
+                occurrenceStatus = None
 
             try:
                 decimalLongitude = val["decimalLongitude"]
@@ -379,20 +392,19 @@ def fetch_gbif_data():
 
             if country is None:
                 country_data = None
+
+            if country_code is None:
+                country_data_code = None
             else:
-                country_data = Country.query.filter_by(country_name=country).first()
+                country_data = Country.query.filter_by(
+                    country_name=country, country_code=country_code
+                ).first()
             if country_data is None:
-                # breakpoint()
-                country_data = Country(country_name=country)
+
+                country_data = Country(country_name=country, country_code=country_code)
                 db.session.add(country_data)
                 db.session.commit()
 
-            # try:
-            #     country = Country.query.filter_by(country_name=country).first()
-            # except:
-            #     country = Country(country_name=country)
-            #     db.session.add(country)
-            #     db.session.commit()
             if "year" not in val.keys():
                 pass
             try:
@@ -409,22 +421,11 @@ def fetch_gbif_data():
                     longitude=decimalLongitude,
                     speciesKey=indx.id,
                     countryKey=country_data,
+                    occurrenceStatus=occurrenceStatus,
+                    basisOfRecord=basisOfRecord,
+                    gbifId=gbifID,
+                    gbifIdLink=f"https://www.gbif.org/occurrence/{gbifID}",
                 )
             )
 
         db.session.commit()
-
-        #     country_list.append(country)
-        #     longitude_list.append(decimalLongitude)
-        #     latitude_list.append(decimalLatitude)
-        #     year_list.append(year)
-        #     month_list.append(month)
-        #     day_list.append(day)
-        # data["year"] = year
-        # data["month"] = month
-        # data["day"] = day
-        # data["country"] = country
-        # data["longitude"] = longitude
-        # data["latitude"] = latitude
-        # data["scientificName"] = specie_name
-        # print(data)

@@ -53,7 +53,8 @@ class Genus(db.Model):
 
 class Country(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    country_name = db.Column(db.String(512), nullable=True)
+    country_name = db.Column(db.String(512), nullable=True, unique=True)
+    country_code = db.Column(db.String(512), nullable=True, unique=True)
 
 
 class Data(db.Model):
@@ -63,6 +64,11 @@ class Data(db.Model):
     year = db.Column(db.Integer, nullable=True)
     latitude = db.Column(db.Float, nullable=True)
     longitude = db.Column(db.Float, nullable=True)
+
+    occurrenceStatus = db.Column(db.String(512), nullable=True)
+    basisOfRecord = db.Column(db.String(512), nullable=True)
+    gbifId = db.Column(db.String(512), nullable=True)
+    gbifIdLink = db.Column(db.String(512), nullable=True)
 
     speciesKey = db.Column(db.Integer, db.ForeignKey("species.id"), nullable=True)
     species = db.relationship("Species", backref="species_ref")
