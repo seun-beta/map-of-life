@@ -38,8 +38,8 @@ def drop_create():
 
 
 def open_file():
-
-    file_path = os.path.abspath("new.csv")
+    file_name = input("Input the file name: ")
+    file_path = os.path.abspath(file_name)
     data = pd.read_csv(
         file_path,
         header=0,
