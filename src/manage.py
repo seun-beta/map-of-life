@@ -1,5 +1,4 @@
 # flake8: noqa
-import os
 import sys
 
 import click
@@ -37,22 +36,16 @@ def drop_create():
     db.create_all()
 
 
-def open_file():
-
-    file_path = os.path.abspath("new.csv")
-    data = pd.read_csv(
-        file_path,
-        header=0,
-        sep="\t",
-    )
-    return data
-
-
 @click.command(name="seed_kingdom")
 @with_appcontext
 def seed_kingdom():
     sys.stdout.write("=== Importing Organism Kingdom ===")
-    data = open_file()
+
+    data = pd.read_csv(
+        "/Users/seunfunmiadegoke/Desktop/bookmarker-api/new.csv",
+        header=0,
+        sep="\t",
+    )
     data = data[["kingdom", "kingdomKey"]].dropna(axis=0).drop_duplicates()
     data.index = [x for x in range(len(data))]
 
@@ -75,7 +68,11 @@ def seed_kingdom():
 def seed_phylum():
     sys.stdout.write("=== Importing Organism Phylum ===")
 
-    data = open_file()
+    data = pd.read_csv(
+        "/Users/seunfunmiadegoke/Desktop/bookmarker-api/new.csv",
+        header=0,
+        sep="\t",
+    )
     data = data[["phylum", "phylumKey"]].dropna(axis=0).drop_duplicates()
     data.index = [x for x in range(len(data))]
 
@@ -97,7 +94,12 @@ def seed_phylum():
 @with_appcontext
 def seed_class():
     sys.stdout.write("=== Importing Organism Class ===")
-    data = open_file()
+
+    data = pd.read_csv(
+        "/Users/seunfunmiadegoke/Desktop/bookmarker-api/new.csv",
+        header=0,
+        sep="\t",
+    )
     data = data[["class", "classKey"]].dropna(axis=0).drop_duplicates()
     data.index = [x for x in range(len(data))]
 
@@ -120,7 +122,11 @@ def seed_class():
 def seed_order():
     sys.stdout.write("=== Importing Organism Order ===")
 
-    data = open_file()
+    data = pd.read_csv(
+        "/Users/seunfunmiadegoke/Desktop/bookmarker-api/new.csv",
+        header=0,
+        sep="\t",
+    )
     data = data[["order", "orderKey"]].dropna(axis=0).drop_duplicates()
     data.index = [x for x in range(len(data))]
 
@@ -143,7 +149,11 @@ def seed_order():
 def seed_family():
     sys.stdout.write("=== Importing Organism Family ===")
 
-    data = open_file()
+    data = pd.read_csv(
+        "/Users/seunfunmiadegoke/Desktop/bookmarker-api/new.csv",
+        header=0,
+        sep="\t",
+    )
     data = data[["family", "familyKey"]].dropna(axis=0).drop_duplicates()
     data.index = [x for x in range(len(data))]
 
@@ -166,7 +176,11 @@ def seed_family():
 def seed_genus():
     sys.stdout.write("=== Importing Organism Genus ===")
 
-    data = open_file()
+    data = pd.read_csv(
+        "/Users/seunfunmiadegoke/Desktop/bookmarker-api/new.csv",
+        header=0,
+        sep="\t",
+    )
     data = data[["genus", "genusKey"]].dropna(axis=0).drop_duplicates()
     data.index = [x for x in range(len(data))]
 
@@ -189,7 +203,11 @@ def seed_genus():
 def seed_species():
     sys.stdout.write("=== Importing Organism Species ===")
 
-    data = open_file()
+    data = pd.read_csv(
+        "/Users/seunfunmiadegoke/Desktop/bookmarker-api/new.csv",
+        header=0,
+        sep="\t",
+    )
     # data = data[["species", "speciesKey"]].dropna(axis=0).drop_duplicates()
     # data.index = [x for x in range(len(data))]
 
@@ -310,17 +328,17 @@ def seed_species():
 @click.command(name="seed_gbif")
 @with_appcontext
 def fetch_gbif_data():
-    sys.stdout.write("=== Seeding Species data from GBIF ===")
     species = Species.query.all()
     for indx in species:
         specie_name = indx.species
-        url = f"""https://www.gbif.org/api/occurrence/search?advanced=false&dwca_extension.\
-            facetLimit=1000&facetMultiselect=true&issue.facetLimit=1000&locale=en&month.\
-                facetLimit=12&q={specie_name}&type_status.facetLimit=1000"""
+        url = f"https://www.gbif.org/api/occurrence/search?advanced=false&dwca_extension.facetLimit=1000&facetMultiselect=true&issue.facetLimit=1000&locale=en&month.facetLimit=12&q={specie_name}&type_status.facetLimit=1000"
         response = requests.get(url)
 
         response = response.json()
+        data = pd.DataFrame()
+
         print(len(response["results"]))
+
         for val in response["results"]:
             try:
                 country = val["country"]
@@ -411,4 +429,3 @@ def fetch_gbif_data():
             )
 
         db.session.commit()
-    sys.stdout.write("=== Done seeding Specie data from GBIF ===")

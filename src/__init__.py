@@ -3,9 +3,7 @@
 import os
 
 from flask import Flask, jsonify
-from flasgger import Swagger
 
-from src.config.swagger import swagger_config, template
 from src.api import mol_bp
 from src.constants.http_status_codes import (
     HTTP_404_NOT_FOUND,
@@ -50,7 +48,7 @@ def create_app(test_config=None):
 
     db.app = app
     db.init_app(app)
-    Swagger(app=app, config=swagger_config, template=template)
+
     app.register_blueprint(mol_bp)
 
     app.cli.add_command(create_tables)
