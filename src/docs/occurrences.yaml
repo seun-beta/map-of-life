@@ -1,0 +1,25 @@
+tags:
+  - Species Occurrences
+parameters:
+  - in: path
+    name: species_name
+    type: string
+    required: true
+    description: Species name.
+
+  - in: query
+    name: per_page
+    type: integer
+    description: The numbers of items to be displayed.
+
+  - in: query
+    name: page
+    type: integer
+    description: The page number.
+
+responses:
+  200:
+    description: A user can get the species occurrences.
+
+  404:
+    description: species occurrences not found
