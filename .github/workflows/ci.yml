@@ -45,8 +45,8 @@ jobs:
       - name: Build the Stack
         run: make build
 
-      - name: Runserver
-        run: make up
+      # - name: Runserver
+      #   run: make up
 
       - name: Tear down the Stack
         run: make down
