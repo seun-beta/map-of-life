@@ -1,14 +1,8 @@
 template = {
     "swagger": "2.0",
     "info": {
-        "title": "Bookmarker API",
-        "description": "API for bookmarks",
-        "contact": {
-            "The Software Village Inc": "",
-            "Codepiercer": "",
-            "email": "seunfunmi.adegoke@gmail.com",
-            "url": "https://seunbeta.hashnode.dev/",
-        },
+        "title": "MOL API",
+        "description": "API for Map of Life",
         "termsOfService": "",
         "version": "1.0",
     },
