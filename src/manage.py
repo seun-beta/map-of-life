@@ -38,7 +38,7 @@ def drop_create():
 
 
 def open_file():
-    file_name = input("Input the file name: ")
+    file_name = input("Input the file name:\n ")
     file_path = os.path.abspath(file_name)
     data = pd.read_csv(
         file_path,
